@@ -155,10 +155,6 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('welcome-bg.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -234,6 +230,39 @@
       max-width: 650px;
       opacity: 0; /* Oculto inicialmente, GSAP lo mostrará */
       transform: translateY(30px);
+    }
+
+    .scroll-text {
+      position: absolute;
+      opacity: 0;
+      transform: translateY(30px);
+      max-width: 650px;
+      z-index: 5;
+    }
+    
+    .scroll-text.text-1 {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-text h2 {
+      font-size: 56px;
+      line-height: 1.1;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-dark);
+    }
+
+    .scroll-text h2 span {
+      color: var(--primary);
+      display: block;
+    }
+
+    .scroll-text p {
+      color: var(--text-gray);
+      font-size: 18px;
+      margin-bottom: 40px;
+      line-height: 1.7;
     }
 
     .hero h1 {
@@ -936,6 +965,18 @@
     <canvas id="hero-video-canvas"></canvas>
 
     <div class="container hero-content">
+      <div class="scroll-text text-1">
+        <h2>Innovación en <span>Desarrollo de Software</span> a tu medida.</h2>
+        <p>Creamos soluciones tecnológicas innovadoras y escalables para impulsar el crecimiento de tu negocio de forma inteligente.</p>
+      </div>
+      <div class="scroll-text text-2">
+        <h2>Avanzamos con <span>Inteligencia Artificial</span> para tu negocio.</h2>
+        <p>Potenciamos tus operaciones integrando soluciones de automatización que optimizan y revolucionan tus procesos.</p>
+      </div>
+      <div class="scroll-text text-3">
+        <h2>Lideramos la <span>Transformación Digital</span> de tu empresa.</h2>
+        <p>Acompañamos a tu empresa en su evolución tecnológica, asegurando la competitividad en el mercado del futuro.</p>
+      </div>
       <div class="hero-text">
         <h1>Construimos <span>Soluciones Digitales</span> Que Escalan.</h1>
         <p>Wimprove ayuda a empresas de BPO y Contact Centers a construir operaciones poderosas mediante tecnología omnicanal e Inteligencia Artificial.</p>
@@ -1317,9 +1358,9 @@
       // 0. Desvanecer la pantalla de bienvenida
       tl.to("#welcome-screen", {
         opacity: 0,
-        duration: 1.5,
+        duration: 0.5,
         ease: "power1.inOut"
-      });
+      }, 0);
 
       // 1. Animar fotogramas del video
       tl.to(video, {
@@ -1328,15 +1369,29 @@
         ease: "none",
         onUpdate: render,
         duration: 4 // Toma la mayor parte del tiempo de scroll
-      });
+      }, 0.5);
 
-      // 2. Animar la aparición del texto al llegar al último frame
+      const videoStart = 0.5;
+      const videoDuration = 4;
+
+      // Texto 1 (Desde el inicio)
+      tl.to(".text-1", { opacity: 0, y: -20, duration: 0.15 }, videoStart + videoDuration * (65 / 240));
+
+      // Texto 2 (Frame 74)
+      tl.to(".text-2", { opacity: 1, y: 0, duration: 0.15 }, videoStart + videoDuration * (74 / 240));
+      tl.to(".text-2", { opacity: 0, y: -20, duration: 0.15 }, videoStart + videoDuration * (128 / 240));
+
+      // Texto 3 (Frame 138)
+      tl.to(".text-3", { opacity: 1, y: 0, duration: 0.15 }, videoStart + videoDuration * (138 / 240));
+      tl.to(".text-3", { opacity: 0, y: -20, duration: 0.15 }, videoStart + videoDuration * (205 / 240));
+
+      // Texto Final (hero-text)
       tl.to(".hero-text", {
         opacity: 1,
         y: 0,
-        duration: 1, // Toma la parte final del scroll
+        duration: 0.3,
         ease: "power2.out"
-      });
+      }, videoStart + videoDuration * (220 / 240));
     }
 
     // Carousel buttons
